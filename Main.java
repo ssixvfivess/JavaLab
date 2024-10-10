@@ -3,6 +3,8 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.text.DecimalFormat;
 
+//ссылка на отчет: https://docs.google.com/document/d/1jZ8z_uvypOGy2DRBP0OOIIhQHrsLdtB2Eqk0GZI0l5Q/edit
+
 public class Main {
 
     public static void main(String[] args) {
