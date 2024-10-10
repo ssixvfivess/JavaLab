@@ -18,19 +18,27 @@ public class Main {
             System.out.println("Дробная часть числа: " + myFormat.format(result));
         } catch (InputMismatchException e) {
             System.out.println("Ошибка: введено некорректное число.");
+            System.out.println("Ошибка: " + e.getMessage());
             scan.nextLine();
         }
 
-        // Задача 3: Преобразование символа цифры в число
+        // Задача 3: Цифры в число
         try {
             System.out.print("Введите символ цифры от 0 до 9: ");
-            char charInput = scan.next().charAt(0);
-            if (charInput < '0' || charInput > '9') {
-                throw new InputMismatchException();
+            String input = scan.next();
+
+            if (input.length() != 1) {
+                throw new InputMismatchException("Введено более одного символа.");
             }
+
+            char charInput = input.charAt(0);
+            if (charInput < '0' || charInput > '9') {
+                throw new InputMismatchException("Введен некорректный символ.");
+            }
+
             System.out.println("Результат: " + main.charToNum(charInput));
         } catch (InputMismatchException e) {
-            System.out.println("Ошибка: введен некорректный символ.");
+            System.out.println("Ошибка: " + e.getMessage());
             scan.nextLine();
         }
 
@@ -41,6 +49,7 @@ public class Main {
             System.out.println("Результат: " + main.is2Digits(intInput));
         } catch (InputMismatchException e) {
             System.out.println("Ошибка: введено некорректное число.");
+            System.out.println("Ошибка: " + e.getMessage());
             scan.nextLine();
         }
 
@@ -55,6 +64,7 @@ public class Main {
             System.out.println("Результат: " + main.isInRange(a, b, num));
         } catch (InputMismatchException e) {
             System.out.println("Ошибка: введено некорректное число.");
+            System.out.println("Ошибка: " + e.getMessage());
             scan.nextLine();
         }
 
@@ -69,6 +79,7 @@ public class Main {
             System.out.println("Результат: " + main.isEqual(first, second, third));
         } catch (InputMismatchException e) {
             System.out.println("Ошибка: введено некорректное число.");
+            System.out.println("Ошибка: " + e.getMessage());
             scan.nextLine();
         }
 
@@ -76,9 +87,10 @@ public class Main {
         try {
             System.out.print("Введите число для вычисления модуля: ");
             int absInput = scan.nextInt();
-            System.out.println("Результат: " + main.abs(absInput));
+            System.out.println("Модуль: " + main.abs(absInput));
         } catch (InputMismatchException e) {
             System.out.println("Ошибка: введено некорректное число.");
+            System.out.println("Ошибка: " + e.getMessage());
             scan.nextLine();
         }
 
@@ -89,6 +101,7 @@ public class Main {
             System.out.println("Результат: " + main.is35(is35Input));
         } catch (InputMismatchException e) {
             System.out.println("Ошибка: введено некорректное число.");
+            System.out.println("Ошибка: " + e.getMessage());
             scan.nextLine();
         }
 
@@ -103,6 +116,7 @@ public class Main {
             System.out.println("Максимальное из 3-х чисел: " + main.max3(max1Input, max2Input, max3Input));
         } catch (InputMismatchException e) {
             System.out.println("Ошибка: введено некорректное число.");
+            System.out.println("Ошибка: " + e.getMessage());
             scan.nextLine();
         }
 
@@ -115,6 +129,7 @@ public class Main {
             System.out.println("Сумма x и y: " + main.sum2(sum1Input, sum2Input));
         } catch (InputMismatchException e) {
             System.out.println("Ошибка: введено некорректное число.");
+            System.out.println("Ошибка: " + e.getMessage());
             scan.nextLine();
         }
 
@@ -125,6 +140,7 @@ public class Main {
             System.out.println(main.day(x));
         } catch (InputMismatchException e) {
             System.out.println("Ошибка: введено некорректное число.");
+            System.out.println("Ошибка: " + e.getMessage());
             scan.nextLine();
         }
 
@@ -135,6 +151,7 @@ public class Main {
             System.out.println("Результат строки: " + main.listNums(listNumsInput));
         } catch (InputMismatchException e) {
             System.out.println("Ошибка: введено некорректное число.");
+            System.out.println("Ошибка: " + e.getMessage());
             scan.nextLine();
         }
 
@@ -145,6 +162,7 @@ public class Main {
             System.out.println("Четные числа от 0 до x: " + main.chet(chetInput));
         } catch (InputMismatchException e) {
             System.out.println("Ошибка: введено некорректное число.");
+            System.out.println("Ошибка: " + e.getMessage());
             scan.nextLine();
         }
 
@@ -155,6 +173,7 @@ public class Main {
             System.out.println("Длина вашего числа: " + main.numLen(numLenInput));
         } catch (InputMismatchException e) {
             System.out.println("Ошибка: введено некорректное число.");
+            System.out.println("Ошибка: " + e.getMessage());
             scan.nextLine();
         }
 
@@ -166,6 +185,7 @@ public class Main {
             main.square(squareInput);
         } catch (InputMismatchException e) {
             System.out.println("Ошибка: введено некорректное число.");
+            System.out.println("Ошибка: " + e.getMessage());
             scan.nextLine();
         }
 
@@ -177,6 +197,7 @@ public class Main {
             main.rightTriangle(rightTriangleInput);
         } catch (InputMismatchException e) {
             System.out.println("Ошибка: введено некорректное число.");
+            System.out.println("Ошибка: " + e.getMessage());
             scan.nextLine();
         }
 
@@ -194,6 +215,7 @@ public class Main {
             System.out.println("Число x в индексе " + main.findFirst(arr, findFirstInput));
         } catch (InputMismatchException e) {
             System.out.println("Ошибка: введено некорректное число.");
+            System.out.println("Ошибка: " + e.getMessage());
             scan.nextLine();
         }
 
@@ -209,6 +231,7 @@ public class Main {
             System.out.println("Максимальный элемент массива по модулю: " + main.maxAbs(arr));
         } catch (InputMismatchException e) {
             System.out.println("Ошибка: введено некорректное число.");
+            System.out.println("Ошибка: " + e.getMessage());
             scan.nextLine();
         }
 
@@ -233,6 +256,7 @@ public class Main {
             System.out.println("Обновленный массив: " + Arrays.toString(main.add(arr1, ins, pos)));
         } catch (InputMismatchException e) {
             System.out.println("Ошибка: введено некорректное число.");
+            System.out.println("Ошибка: " + e.getMessage());
             scan.nextLine();
         }
 
@@ -248,6 +272,7 @@ public class Main {
             System.out.println("Элементы массива реверсом: " + Arrays.toString(main.reverseBack(arr)));
         } catch (InputMismatchException e) {
             System.out.println("Ошибка: введено некорректное число.");
+            System.out.println("Ошибка: " + e.getMessage());
             scan.nextLine();
         }
 
@@ -265,6 +290,7 @@ public class Main {
             System.out.println("число x находится в этих индексах: " + Arrays.toString(main.findAll(arr, findAllInput)));
         } catch (InputMismatchException e) {
             System.out.println("Ошибка: введено некорректное число.");
+            System.out.println("Ошибка: " + e.getMessage());
             scan.nextLine();
         }
 
