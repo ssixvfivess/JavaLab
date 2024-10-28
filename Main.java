@@ -1,545 +1,353 @@
-import java.util.Arrays;
-import java.util.InputMismatchException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
-import java.text.DecimalFormat;
 
-//ссылка на отчет: https://docs.google.com/document/d/1jZ8z_uvypOGy2DRBP0OOIIhQHrsLdtB2Eqk0GZI0l5Q/edit
+//https://docs.google.com/document/d/1jZ8z_uvypOGy2DRBP0OOIIhQHrsLdtB2Eqk0GZI0l5Q/edit?tab=t.0#heading=h.30j0zll
 
 public class Main {
+    private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
-        Main main = new Main();
-        Scanner scan = new Scanner(System.in);
-
         while (true) {
-            System.out.printf("Выберите действие от 0 до 20: ");
-            while (!scan.hasNextInt()) {
-                System.out.print("Ошибка! Введите целое число: ");
-                scan.next(); // Очистка ввода
-            }
-            int d = scan.nextInt();
-            if (d < 0 || d > 20) {
-                System.out.println("Введено неверное значение!");
-                continue;
-            }
+            System.out.println("Выберите действие:");
+            System.out.println("0. Выход");
+            System.out.println("1. Создать имена");
+            System.out.println("2. Создать дома");
+            System.out.println("3. Создать сотрудников и отделы");
+            System.out.println("4. Вывести список сотрудников отдела");
+            System.out.println("5. Создать имена (расширенная)");
+            System.out.println("6. Работа с дробями");
 
-            switch (d) {
+            int choice = getIntInput("Введите число от 0 до 6: ", 0, 6);
+
+            switch (choice) {
                 case 0:
                     System.out.println("Выход из программы.");
-                    scan.close();
                     return;
                 case 1:
-                    // Задача 1: Дробная часть
-                    try {
-                        System.out.print("Введите число: ");
-                        double num1 = scan.nextDouble();
-                        double result = fraction(num1);
-                        DecimalFormat myFormat = new DecimalFormat("#.###");
-                        System.out.println("Дробная часть числа: " + myFormat.format(result));
-                    } catch (InputMismatchException e) {
-                        System.out.println("Ошибка: введено некорректное число.");
-                        System.out.println("Ошибка: " + e.getMessage());
-                        scan.nextLine();
-                    }
+                    createNames();
                     break;
                 case 2:
-                    // Задача 3: Цифры в число
-                    try {
-                        System.out.print("Введите символ цифры от 0 до 9: ");
-                        String input = scan.next();
-
-                        if (input.length() != 1) {
-                            throw new InputMismatchException("Введено более одного символа.");
-                        }
-
-                        char charInput = input.charAt(0);
-                        if (charInput < '0' || charInput > '9') {
-                            throw new InputMismatchException("Введен некорректный символ.");
-                        }
-
-                        System.out.println("Результат: " + main.charToNum(charInput));
-                    } catch (InputMismatchException e) {
-                        System.out.println("Ошибка: " + e.getMessage());
-                        scan.nextLine();
-                    }
+                    createHouses();
                     break;
                 case 3:
-                    // Задача 5: Проверка на двузначность
-                    try {
-                        System.out.print("Введите число для проверки на двузначность: ");
-                        int intInput = scan.nextInt();
-                        System.out.println("Результат: " + main.is2Digits(intInput));
-                    } catch (InputMismatchException e) {
-                        System.out.println("Ошибка: введено некорректное число.");
-                        System.out.println("Ошибка: " + e.getMessage());
-                        scan.nextLine();
-                    }
+                    createEmployeesAndDepartments();
                     break;
                 case 4:
-                    // Задача 7: Проверка на вхождение в диапазон
-                    try {
-                        System.out.print("Введите левую границу диапазона: ");
-                        int a = scan.nextInt();
-                        System.out.print("Введите правую границу диапазона: ");
-                        int b = scan.nextInt();
-                        System.out.print("Введите число для проверки на вхождение в диапазон: ");
-                        int num = scan.nextInt();
-                        System.out.println("Результат: " + main.isInRange(a, b, num));
-                    } catch (InputMismatchException e) {
-                        System.out.println("Ошибка: введено некорректное число.");
-                        System.out.println("Ошибка: " + e.getMessage());
-                        scan.nextLine();
-                    }
+                    printDepartmentEmployees();
                     break;
                 case 5:
-                    // Задача 9: Проверка на равенство трех чисел
-                    try {
-                        System.out.print("Введите первое число для сравнения: ");
-                        int first = scan.nextInt();
-                        System.out.print("Введите второе число для сравнения: ");
-                        int second = scan.nextInt();
-                        System.out.print("Введите третье число для сравнения: ");
-                        int third = scan.nextInt();
-                        System.out.println("Результат: " + main.isEqual(first, second, third));
-                    } catch (InputMismatchException e) {
-                        System.out.println("Ошибка: введено некорректное число.");
-                        System.out.println("Ошибка: " + e.getMessage());
-                        scan.nextLine();
-                    }
+                    createExtendedNames();
                     break;
                 case 6:
-                    // Задача 1: Вычисление модуля числа
-                    try {
-                        System.out.print("Введите число для вычисления модуля: ");
-                        int absInput = scan.nextInt();
-                        System.out.println("Модуль: " + main.abs(absInput));
-                    } catch (InputMismatchException e) {
-                        System.out.println("Ошибка: введено некорректное число.");
-                        System.out.println("Ошибка: " + e.getMessage());
-                        scan.nextLine();
-                    }
-                    break;
-                case 7:
-                    // Задача 3: Тридцать пять
-                    try {
-                        System.out.print("Введите число для проверки на делимость на 3 или 5: ");
-                        int is35Input = scan.nextInt();
-                        System.out.println("Результат: " + main.is35(is35Input));
-                    } catch (InputMismatchException e) {
-                        System.out.println("Ошибка: введено некорректное число.");
-                        System.out.println("Ошибка: " + e.getMessage());
-                        scan.nextLine();
-                    }
-                    break;
-                case 8:
-                    // Задача 5: Максимум из трех чисел
-                    try {
-                        System.out.print("Введите x: ");
-                        int max1Input = scan.nextInt();
-                        System.out.print("Введите y: ");
-                        int max2Input = scan.nextInt();
-                        System.out.print("Введите z: ");
-                        int max3Input = scan.nextInt();
-                        System.out.println("Максимальное из 3-х чисел: " + main.max3(max1Input, max2Input, max3Input));
-                    } catch (InputMismatchException e) {
-                        System.out.println("Ошибка: введено некорректное число.");
-                        System.out.println("Ошибка: " + e.getMessage());
-                        scan.nextLine();
-                    }
-                    break;
-                case 9:
-                    // Задача 7: Двойная сумма
-                    try {
-                        System.out.print("Введите x: ");
-                        int sum1Input = scan.nextInt();
-                        System.out.print("Введите y: ");
-                        int sum2Input = scan.nextInt();
-                        System.out.println("Сумма x и y: " + main.sum2(sum1Input, sum2Input));
-                    } catch (InputMismatchException e) {
-                        System.out.println("Ошибка: введено некорректное число.");
-                        System.out.println("Ошибка: " + e.getMessage());
-                        scan.nextLine();
-                    }
-                    break;
-                case 10:
-                    // Задача 9: День Недели
-                    try {
-                        System.out.print("Введите номер дня недели: ");
-                        int x = scan.nextInt();
-                        System.out.println(main.day(x));
-                    } catch (InputMismatchException e) {
-                        System.out.println("Ошибка: введено некорректное число.");
-                        System.out.println("Ошибка: " + e.getMessage());
-                        scan.nextLine();
-                    }
-                    break;
-                case 11:
-                    // Задача 1: Числа подряд
-                    try {
-                        System.out.print("Введите число x: ");
-                        int listNumsInput = scan.nextInt();
-                        System.out.println("Результат строки: " + main.listNums(listNumsInput));
-                    } catch (InputMismatchException e) {
-                        System.out.println("Ошибка: введено некорректное число.");
-                        System.out.println("Ошибка: " + e.getMessage());
-                        scan.nextLine();
-                    }
-                    break;
-                case 12:
-                    // Задача 3: Четные числа
-                    try {
-                        System.out.print("Введите число x: ");
-                        int chetInput = scan.nextInt();
-                        System.out.println("Четные числа от 0 до x: " + main.chet(chetInput));
-                    } catch (InputMismatchException e) {
-                        System.out.println("Ошибка: введено некорректное число.");
-                        System.out.println("Ошибка: " + e.getMessage());
-                        scan.nextLine();
-                    }
-                    break;
-                case 13:
-                    // Задача 5: Длина числа
-                    try {
-                        System.out.print("Введите число x: ");
-                        long numLenInput = scan.nextLong();
-                        System.out.println("Длина вашего числа: " + main.numLen(numLenInput));
-                    } catch (InputMismatchException e) {
-                        System.out.println("Ошибка: введено некорректное число.");
-                        System.out.println("Ошибка: " + e.getMessage());
-                        scan.nextLine();
-                    }
-                    break;
-                case 14:
-                    // Задача 7: Квадрат
-                    try {
-                        System.out.print("Введите число x: ");
-                        int squareInput = scan.nextInt();
-                        System.out.println("Квадрат размером x на x :");
-                        main.square(squareInput);
-                    } catch (InputMismatchException e) {
-                        System.out.println("Ошибка: введено некорректное число.");
-                        System.out.println("Ошибка: " + e.getMessage());
-                        scan.nextLine();
-                    }
-                    break;
-                case 15:
-                    // Задача 9: Правый треугольник
-                    try {
-                        System.out.print("Введите число x: ");
-                        int rightTriangleInput = scan.nextInt();
-                        System.out.println("Правый треугольник x на x:");
-                        main.rightTriangle(rightTriangleInput);
-                    } catch (InputMismatchException e) {
-                        System.out.println("Ошибка: введено некорректное число.");
-                        System.out.println("Ошибка: " + e.getMessage());
-                        scan.nextLine();
-                    }
-                    break;
-                case 16:
-                    // Задача 1: Поиск первого вхождения
-                    try {
-                        System.out.print("Введите размер массива: ");
-                        int size = scan.nextInt();
-                        int[] arr = new int[size];
-                        System.out.println("Введите элементы массива:");
-                        for (int i = 0; i < size; i++) {
-                            arr[i] = scan.nextInt();
-                        }
-                        System.out.print("Введите число x для проверки вхождения: ");
-                        int findFirstInput = scan.nextInt();
-                        System.out.println("Число x в индексе " + main.findFirst(arr, findFirstInput));
-                    } catch (InputMismatchException e) {
-                        System.out.println("Ошибка: введено некорректное число.");
-                        System.out.println("Ошибка: " + e.getMessage());
-                        scan.nextLine();
-                    }
-                    break;
-                case 17:
-                    // Задача 3: Поиск максимального по модулю
-                    try {
-                        System.out.print("Введите размер массива: ");
-                        int size = scan.nextInt();
-                        int[] arr = new int[size];
-                        System.out.println("Введите элементы массива:");
-                        for (int i = 0; i < size; i++) {
-                            arr[i] = scan.nextInt();
-                        }
-                        System.out.println("Максимальный элемент массива по модулю: " + main.maxAbs(arr));
-                    } catch (InputMismatchException e) {
-                        System.out.println("Ошибка: введено некорректное число.");
-                        System.out.println("Ошибка: " + e.getMessage());
-                        scan.nextLine();
-                    }
-                    break;
-                case 18:
-                    // Задача 5: Добавление массива в массив
-                    try {
-                        System.out.print("Введите размер первого массива: ");
-                        int size = scan.nextInt();
-                        int[] arr1 = new int[size];
-                        System.out.println("Введите элементы первого массива:");
-                        for (int i = 0; i < size; i++) {
-                            arr1[i] = scan.nextInt();
-                        }
-                        System.out.print("Введите размер второго массива: ");
-                        size = scan.nextInt();
-                        int[] ins = new int[size];
-                        System.out.println("Введите элементы второго массива:");
-                        for (int i = 0; i < size; i++) {
-                            ins[i] = scan.nextInt();
-                        }
-                        System.out.print("Введите в каком индексе первого массива разместить второй массив : ");
-                        int pos = scan.nextInt();
-                        System.out.println("Обновленный массив: " + Arrays.toString(main.add(arr1, ins, pos)));
-                    } catch (InputMismatchException e) {
-                        System.out.println("Ошибка: введено некорректное число.");
-                        System.out.println("Ошибка: " + e.getMessage());
-                        scan.nextLine();
-                    }
-                    break;
-                case 19:
-                    // Задача 7: Возвратный реверс
-                    try {
-                        System.out.print("Введите размер массива: ");
-                        int size = scan.nextInt();
-                        int[] arr = new int[size];
-                        System.out.println("Введите элементы массива:");
-                        for (int i = 0; i < size; i++) {
-                            arr[i] = scan.nextInt();
-                        }
-                        System.out.println("Элементы массива реверсом: " + Arrays.toString(main.reverseBack(arr)));
-                    } catch (InputMismatchException e) {
-                        System.out.println("Ошибка: введено некорректное число.");
-                        System.out.println("Ошибка: " + e.getMessage());
-                        scan.nextLine();
-                    }
-                    break;
-                case 20:
-                    // Задача 9: Все вхождения
-                    try {
-                        System.out.print("Введите размер массива: ");
-                        int size = scan.nextInt();
-                        int[] arr = new int[size];
-                        System.out.println("Введите элементы массива:");
-                        for (int i = 0; i < size; i++) {
-                            arr[i] = scan.nextInt();
-                        }
-                        System.out.print("Введите число x чтобы проверить сколько раз оно входит в массив: ");
-                        int findAllInput = scan.nextInt();
-                        System.out.println("число x находится в этих индексах: " + Arrays.toString(main.findAll(arr, findAllInput)));
-                    } catch (InputMismatchException e) {
-                        System.out.println("Ошибка: введено некорректное число.");
-                        System.out.println("Ошибка: " + e.getMessage());
-                        scan.nextLine();
-                    }
+                    workWithFractions();
                     break;
                 default:
-                    System.out.println("Неверный выбор действия.");
-                    break;
+                    System.out.println("Неверный выбор. Попробуйте снова.");
             }
         }
     }
 
+    private static void createNames() {
+        System.out.println("Создание имен:");
+        String firstName1 = getStringInput("Введите ИМЯ для первого имени: ");
+        String lastName1 = getStringInput("Введите ФАМИЛИЮ для первого имени: ");
+        String middleName1 = getStringInput("Введите ОТЧЕСТВО для первого имени: ");
+        Name name1 = new Name(firstName1, lastName1, middleName1);
 
-    //1 МОДУЛЬ
-    // Задача 1: Дробная часть
-    public static double fraction(double x) {
-        return x % 1;
+        String firstName2 = getStringInput("Введите ФАМИЛИЮ для второго имени: ");
+        String lastName2 = getStringInput("Введите ФАМИЛИЮ для второго имени: ");
+        String middleName2 = getStringInput("Введите ОТЧЕСТВО для второго имени: ");
+        Name name2 = new Name(firstName2, lastName2, middleName2);
+
+        String firstName3 = getStringInput("Введите ИМЯ для третьего имени: ");
+        String lastName3 = getStringInput("Введите ФАМИЛИЮ для третьего имени: ");
+        String middleName3 = getStringInput("Введите ОТЧЕСТВО для третьего имени: ");
+        Name name3 = new Name(firstName3, lastName3, middleName3);
+
+        System.out.println(name1);
+        System.out.println(name2);
+        System.out.println(name3);
     }
 
-    // Задача 3: Букву в число
-    public int charToNum(char x) {
-        return x - '0';
+    private static void createHouses() {
+        System.out.println("Создание домов:");
+        int floors1 = getIntInput("Введите количество этажей для первого дома: ", 1, Integer.MAX_VALUE);
+        House house1 = new House(floors1);
+
+        int floors2 = getIntInput("Введите количество этажей для второго дома: ", 1, Integer.MAX_VALUE);
+        House house2 = new House(floors2);
+
+        int floors3 = getIntInput("Введите количество этажей для третьего дома: ", 1, Integer.MAX_VALUE);
+        House house3 = new House(floors3);
+
+        System.out.println(house1);
+        System.out.println(house2);
+        System.out.println(house3);
     }
 
-    // Задача 5: Двузначное
-    public boolean is2Digits(int x) {
-        return (x >= 10 && x <= 99)||(x <= -10 && x >= -99);
+    private static void createEmployeesAndDepartments() {
+        System.out.println("Создание сотрудников и отделов:");
+        String emp1Name = getStringInput("Введите имя первого сотрудника: ");
+        Employee emp1 = new Employee(emp1Name);
+
+        String emp2Name = getStringInput("Введите имя второго сотрудника: ");
+        Employee emp2 = new Employee(emp2Name);
+
+        String emp3Name = getStringInput("Введите имя третьего сотрудника: ");
+        Employee emp3 = new Employee(emp3Name);
+
+        String emp4Name = getStringInput("Введите имя начальника отдела: ");
+        Employee emp4 = new Employee(emp4Name);
+
+        String departmentName = getStringInput("Введите название отдела: ");
+        Department department = new Department(departmentName, emp4);
+
+        emp1.setDepartment(department);
+        emp2.setDepartment(department);
+        emp3.setDepartment(department);
+        emp4.setDepartment(department);
+
+        System.out.println(emp1);
+        System.out.println(emp2);
+        System.out.println(emp3);
+        System.out.println(emp4);
     }
 
-    // Задача 7: Диапазон
-    public boolean isInRange(int a, int b, int num) {
-        return num >= Math.min(a, b) && num <= Math.max(a, b);
-    }
+    private static void printDepartmentEmployees() {
+        System.out.println("Вывод списка сотрудников отдела:");
+        String emp1Name = getStringInput("Введите имя первого сотрудника: ");
+        Employee emp1 = new Employee(emp1Name);
 
-    // Задача 9: Равенство
-    public boolean isEqual(int a, int b, int c) {
-        return a == b && b == c;
-    }
+        String emp2Name = getStringInput("Введите имя второго сотрудника: ");
+        Employee emp2 = new Employee(emp2Name);
 
+        String emp3Name = getStringInput("Введите имя третьего сотрудника: ");
+        Employee emp3 = new Employee(emp3Name);
 
+        String departmentName = getStringInput("Введите название отдела: ");
+        Department department = new Department(departmentName, emp2);
 
+        emp1.setDepartment(department);
+        emp3.setDepartment(department);
 
-    //2 МОДУЛЬ
-    // Задача 1: Модуль Числа
-    public int abs(int x) {
-        return x >= 0 ? x : -x;
-    }
-
-    // Задача 3: Тридцать пять
-    public boolean is35(int x) {
-        boolean del3 = x % 3 == 0;
-        boolean del5 = x % 5 == 0;
-        return (del3 || del5) && !(del3 && del5);
-    }
-
-    // Задача 5: Тройной максимум
-    public int max3(int x, int y, int z) {
-        if (x > y && x > z) {
-            return x;
+        System.out.println("Сотрудники отдела " + departmentName + ":");
+        for (Employee emp : department.getEmployees()) {
+            System.out.println(emp);
         }
-        if (y > x && y > z) {
-            return y;
-        }
-        return z;
     }
 
-    // Задача 7: Двойная сумма
-    public int sum2(int x, int y) {
-        int s = x + y;
-        if (s >= 10 && s <= 19) {
-            return 20;
+    private static void createExtendedNames() {
+        System.out.println("Создание имен (расширенная):");
+        String firstName1 = getStringInput("Введите личное имя для первого имени: ");
+        String lastName1 = getStringInput("Введите фамилию для первого имени: ");
+        String middleName1 = getStringInput("Введите отчество для первого имени: ");
+        Name name1 = new Name(firstName1, lastName1, middleName1);
+
+        String firstName2 = getStringInput("Введите личное имя для второго имени: ");
+        String lastName2 = getStringInput("Введите фамилию для второго имени: ");
+        String middleName2 = getStringInput("Введите отчество для второго имени: ");
+        Name name2 = new Name(firstName2, lastName2, middleName2);
+
+        String firstName3 = getStringInput("Введите личное имя для третьего имени: ");
+        String lastName3 = getStringInput("Введите фамилию для третьего имени: ");
+        String middleName3 = getStringInput("Введите отчество для третьего имени: ");
+        Name name3 = new Name(firstName3, lastName3, middleName3);
+
+        String firstName4 = getStringInput("Введите личное имя для четвертого имени: ");
+        String lastName4 = getStringInput("Введите фамилию для четвертого имени: ");
+        String middleName4 = getStringInput("Введите отчество для четвертого имени: ");
+        Name name4 = new Name(firstName4, lastName4, middleName4);
+
+        System.out.println(name1);
+        System.out.println(name2);
+        System.out.println(name3);
+        System.out.println(name4);
+    }
+
+    private static void workWithFractions() {
+        System.out.println("Работа с дробями:");
+        int numerator1 = getIntInput("Введите числитель для первой дроби: ", 1, Integer.MAX_VALUE);
+        int denominator1 = getIntInput("Введите знаменатель для первой дроби: ", 1, Integer.MAX_VALUE);
+        Fraction f1 = new Fraction(numerator1, denominator1);
+
+        int numerator2 = getIntInput("Введите числитель для второй дроби: ", 1, Integer.MAX_VALUE);
+        int denominator2 = getIntInput("Введите знаменатель для второй дроби: ", 1, Integer.MAX_VALUE);
+        Fraction f2 = new Fraction(numerator2, denominator2);
+
+        int numerator3 = getIntInput("Введите числитель для третьей дроби: ", 1, Integer.MAX_VALUE);
+        int denominator3 = getIntInput("Введите знаменатель для третьей дроби: ", 1, Integer.MAX_VALUE);
+        Fraction f3 = new Fraction(numerator3, denominator3);
+
+        System.out.println(f1 + " * " + f2 + " = " + f1.multiply(f2));
+        System.out.println(f1 + " + " + f2 + " = " + f1.add(f2));
+        System.out.println(f1 + " / " + f2 + " = " + f1.divide(f2));
+        System.out.println(f1 + " - " + f2 + " = " + f1.subtract(f2));
+
+        Fraction result = f1.add(f2).divide(f3).subtract(5);
+        System.out.println("f1.sum(f2).div(f3).minus(5) = " + result);
+    }
+
+    private static int getIntInput(String prompt, int min, int max) {
+        while (true) {
+            System.out.print(prompt);
+            try {
+                int input = Integer.parseInt(scanner.nextLine());
+                if (input >= min && input <= max) {
+                    return input;
+                } else {
+                    System.out.println("Введено неверное значение! Попробуйте снова.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Ошибка! Введите целое число.");
+            }
+        }
+    }
+
+    private static String getStringInput(String prompt) {
+        System.out.print(prompt);
+        return scanner.nextLine();
+    }
+}
+
+// Задача 1: Имена
+class Name {
+    private String firstName;
+    private String lastName;
+    private String middleName;
+
+    public Name(String firstName, String lastName, String middleName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.middleName = middleName;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        if (lastName != null) sb.append(lastName).append(" ");
+        if (firstName != null) sb.append(firstName).append(" ");
+        if (middleName != null) sb.append(middleName);
+        return sb.toString().trim();
+    }
+}
+
+// Задача 2: Дом
+class House {
+    private int floors;
+
+    public House(int floors) {
+        this.floors = floors;
+    }
+
+    @Override
+    public String toString() {
+        String suffix = "этажей";
+        if (floors == 1) suffix = "этаж";
+        else if (floors >= 2 && floors <= 4) suffix = "этажа";
+        return "у дома " + floors + " " + suffix;
+    }
+}
+
+// Задача 3 и 4: Сотрудники и отделы
+class Employee {
+    private String name;
+    private Department department;
+
+    public Employee(String name) {
+        this.name = name;
+    }
+
+    public void setDepartment(Department department) {
+        this.department = department;
+        department.addEmployee(this);
+    }
+
+    @Override
+    public String toString() {
+        if (department != null && department.getHead() == this) {
+            return name + " начальник отдела " + department.getName();
+        } else if (department != null) {
+            return name + " работает в отделе " + department.getName() + ", начальник которого " + department.getHead().name;
         } else {
-            return s;
+            return name + " не прикреплен к отделу";
         }
     }
+}
 
-    // Задача 9: День Недели
-    public String day(int x) {
-        switch (x) {
-            case 0:
-                return "Дни недели начинаются с 1";
-            case 1:
-                return "Monday";
-            case 2:
-                return "Tuesday";
-            case 3:
-                return "Wednesday";
-            case 4:
-                return "Thursday";
-            case 5:
-                return "Friday";
-            case 6:
-                return "Saturday";
-            case 7:
-                return "Sunday";
-            default:
-                return "В неделе 7 дней :)";
-        }
+class Department {
+    private String name;
+    private Employee head;
+    private List<Employee> employees = new ArrayList<>();
+
+    public Department(String name, Employee head) {
+        this.name = name;
+        this.head = head;
     }
 
-
-
-    // 3 МОДУЛЬ
-    // Задача 1: Числа подряд
-    public String listNums(int x) {
-        StringBuilder result = new StringBuilder();
-        for (int i = 0; i <= x; i++) {
-            if (result.length() > 0) {
-                result.append(" ");
-            }
-            result.append(i);
-        }
-        return result.toString();
+    public String getName() {
+        return name;
     }
 
-    // Задача 3: Четные числа
-    public String chet(int x) {
-        StringBuilder result = new StringBuilder();
-        for (int i = 0; i <= x; i += 2) {
-            if (result.length() > 0) {
-                result.append(" ");
-            }
-            result.append(i);
-        }
-        return result.toString();
+    public Employee getHead() {
+        return head;
     }
 
-    // Задача 5: Длина числа
-    public int numLen(long x) {
-        return String.valueOf(Math.abs(x)).length();
+    public void addEmployee(Employee employee) {
+        employees.add(employee);
     }
 
-    // Задача 7: Квадрат
-    public void square(int x) {
-        for (int i = 0; i < x; i++) {
-            for (int j = 0; j < x; j++) {
-                System.out.print(" * ");
-            }
-            System.out.println();
+    public List<Employee> getEmployees() {
+        return employees;
+    }
+}
+
+// Задача 6: Дроби
+class Fraction {
+    private int numerator;
+    private int denominator;
+
+    public Fraction(int numerator, int denominator) {
+        if (denominator == 0) {
+            throw new IllegalArgumentException("Знаменатель не может быть равен нулю.");
         }
+        this.numerator = numerator;
+        this.denominator = denominator;
     }
 
-    // Задача 9: Правый треугольник
-    public void rightTriangle(int x) {
-        for (int i = 1; i <= x; i++) {
-            for (int j = 0; j < x - i; j++) {
-                System.out.print(" ");
-            }
-            for (int k = 0; k < i; k++) {
-                System.out.print("*");
-            }
-            System.out.println();
-        }
+    public Fraction add(Fraction other) {
+        int newNumerator = this.numerator * other.denominator + other.numerator * this.denominator;
+        int newDenominator = this.denominator * other.denominator;
+        return new Fraction(newNumerator, newDenominator);
     }
 
-
-
-    //4 МОДУЛЬ
-    // Задача 1: Поиск первого значения
-    public int findFirst(int[] arr, int x) {
-        for (int i = 0; i < arr.length; i++) {
-            if (arr[i] == x) {
-                return i;
-            }
-        }
-        return -1;
+    public Fraction subtract(Fraction other) {
+        int newNumerator = this.numerator * other.denominator - other.numerator * this.denominator;
+        int newDenominator = this.denominator * other.denominator;
+        return new Fraction(newNumerator, newDenominator);
     }
 
-    // Задача 3: Поиск максимального
-    public int maxAbs(int[] arr) {
-        int max = Integer.MIN_VALUE;
-        for (int num : arr) {
-            if (Math.abs(num) > Math.abs(max)) {
-                max = num;
-            }
-        }
-        return max;
+    public Fraction multiply(Fraction other) {
+        int newNumerator = this.numerator * other.numerator;
+        int newDenominator = this.denominator * other.denominator;
+        return new Fraction(newNumerator, newDenominator);
     }
 
-    // Задача 5: Добавление массива в массив
-    public int[] add(int[] arr, int[] ins, int pos) {
-        int[] result = new int[arr.length + ins.length];
-        System.arraycopy(arr, 0, result, 0, pos);
-        System.arraycopy(ins, 0, result, pos, ins.length);
-        System.arraycopy(arr, pos, result, pos + ins.length, arr.length - pos);
-        return result;
+    public Fraction divide(Fraction other) {
+        if (other.numerator == 0) {
+            throw new IllegalArgumentException("Деление на ноль невозможно.");
+        }
+        int newNumerator = this.numerator * other.denominator;
+        int newDenominator = this.denominator * other.numerator;
+        return new Fraction(newNumerator, newDenominator);
     }
 
-    // Задача 7: Возвратный реверс
-    public int[] reverseBack(int[] arr) {
-        int[] result = new int[arr.length];
-        for (int i = 0; i < arr.length; i++) {
-            result[i] = arr[arr.length - 1 - i];
-        }
-        return result;
+    public Fraction subtract(int number) {
+        return subtract(new Fraction(number, 1));
     }
 
-    // Задача 9: Все вхождения
-    public int[] findAll(int[] arr, int x) {
-        int count = 0;
-        for (int num : arr) {
-            if (num == x) {
-                count++;
-            }
-        }
-        int[] result = new int[count];
-        int index = 0;
-        for (int i = 0; i < arr.length; i++) {
-            if (arr[i] == x) {
-                result[index++] = i;
-            }
-        }
-        return result;
+    @Override
+    public String toString() {
+        return numerator + "/" + denominator;
     }
 }
