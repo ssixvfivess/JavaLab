@@ -2,8 +2,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-//https://docs.google.com/document/d/1jZ8z_uvypOGy2DRBP0OOIIhQHrsLdtB2Eqk0GZI0l5Q/edit?tab=t.0#heading=h.30j0zll
-
 public class Main {
     private static Scanner scanner = new Scanner(System.in);
 
@@ -55,7 +53,7 @@ public class Main {
         String middleName1 = getStringInput("Введите ОТЧЕСТВО для первого имени: ");
         Name name1 = new Name(firstName1, lastName1, middleName1);
 
-        String firstName2 = getStringInput("Введите ФАМИЛИЮ для второго имени: ");
+        String firstName2 = getStringInput("Введите ИМЯ для второго имени: ");
         String lastName2 = getStringInput("Введите ФАМИЛИЮ для второго имени: ");
         String middleName2 = getStringInput("Введите ОТЧЕСТВО для второго имени: ");
         Name name2 = new Name(firstName2, lastName2, middleName2);
@@ -129,12 +127,10 @@ public class Main {
         Department department = new Department(departmentName, emp2);
 
         emp1.setDepartment(department);
+        emp2.setDepartment(department);
         emp3.setDepartment(department);
 
-        System.out.println("Сотрудники отдела " + departmentName + ":");
-        for (Employee emp : department.getEmployees()) {
-            System.out.println(emp);
-        }
+        emp1.printDepartmentEmployees();
     }
 
     private static void createExtendedNames() {
@@ -205,8 +201,15 @@ public class Main {
     }
 
     private static String getStringInput(String prompt) {
-        System.out.print(prompt);
-        return scanner.nextLine();
+        while (true) {
+            System.out.print(prompt);
+            String input = scanner.nextLine().trim();
+            if (!input.isEmpty()) {
+                return input;
+            } else {
+                System.out.println("Введено пустое значение! Попробуйте снова.");
+            }
+        }
     }
 }
 
@@ -258,6 +261,14 @@ class Employee {
         this.name = name;
     }
 
+    public void printDepartmentEmployees() {
+        if (department != null) {
+            department.printAllEmployees();
+        } else {
+            System.out.println("Сотрудник не прикреплен к отделу.");
+        }
+    }
+
     public void setDepartment(Department department) {
         this.department = department;
         department.addEmployee(this);
@@ -295,6 +306,13 @@ class Department {
 
     public void addEmployee(Employee employee) {
         employees.add(employee);
+    }
+
+    public void printAllEmployees() {
+        System.out.println("Сотрудники отдела " + this.name + ":");
+        for (Employee e : employees) {
+            System.out.println(e);
+        }
     }
 
     public List<Employee> getEmployees() {
