@@ -1,44 +1,52 @@
+import java.io.Serializable;
+import java.util.Random;
+import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
+
+// отчет: https://docs.google.com/document/d/19L1Ff0gXfrCqvnmnbus2gL4BRvWnmoIc2zFKqg4ffT8/edit?usp=sharing
 
 public class Main {
-    private static Scanner scanner = new Scanner(System.in);
+    private static final Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
         while (true) {
             System.out.println("Выберите действие:");
             System.out.println("0. Выход");
-            System.out.println("1. Создать имена");
-            System.out.println("2. Создать дома");
-            System.out.println("3. Создать сотрудников и отделы");
-            System.out.println("4. Вывести список сотрудников отдела");
+            System.out.println("1. Работа с дробями 1");
+            System.out.println("2. Работа с дробями 2");
+            System.out.println("3. Работа с дробями 3");
+            System.out.println("4. Работа с дробями 4");
             System.out.println("5. Создать имена (расширенная)");
-            System.out.println("6. Работа с дробями");
+            System.out.println("6. Создать секрет");
+            System.out.println("7. Решение готовых уравнений");
 
-            int choice = getIntInput("Введите число от 0 до 6: ", 0, 6);
+            int choice = getIntInput("Введите число от 0 до 8: ", 0, 8);
 
             switch (choice) {
                 case 0:
                     System.out.println("Выход из программы.");
                     return;
                 case 1:
-                    createNames();
+                    workWithFractions1();
                     break;
                 case 2:
-                    createHouses();
+                    workWithFractions2();
                     break;
                 case 3:
-                    createEmployeesAndDepartments();
+                    workWithFractions3();
                     break;
                 case 4:
-                    printDepartmentEmployees();
+                    workWithFractions4();
                     break;
                 case 5:
-                    createExtendedNames();
+                    createNames();
                     break;
                 case 6:
-                    workWithFractions();
+                    createSecret();
+                    break;
+                case 7:
+                    performAdditions();
                     break;
                 default:
                     System.out.println("Неверный выбор. Попробуйте снова.");
@@ -66,122 +74,177 @@ public class Main {
         System.out.println(name1);
         System.out.println(name2);
         System.out.println(name3);
+    } //имена
+
+    private static void createSecret() {
+        System.out.println("Создание нового секрета:");
+        String keeperName = getStringInput("Введите имя хранителя: ");
+        String secretText = getStringInput("Введите текст секрета: ");
+        Secret secret = new Secret(keeperName, secretText);
+
+        while (true) {
+            System.out.println("Выберите действие:");
+            System.out.println("0. Выход");
+            System.out.println("1. Передать секрет другому человеку");
+            System.out.println("2. Узнать порядок хранителя");
+            System.out.println("3. Узнать количество людей, узнавших секрет после текущего хранителя");
+            System.out.println("4. Узнать имя N-го человека, узнавшего секрет");
+            System.out.println("5. Узнать разницу в количестве символов текста секрета с N-ым человеком");
+
+            int choice = getIntInput("Введите число от 0 до 5: ", 0, 5);
+
+            switch (choice) {
+                case 0:
+                    System.out.println("Выход из создания секрета.");
+                    return;
+                case 1:
+                    String newKeeperName = getStringInput("Введите имя нового хранителя: ");
+                    secret = secret.tellSecretTo(newKeeperName);
+                    break;
+                case 2:
+                    System.out.println("Порядок хранителя: " + secret.getKeeperOrder());
+                    break;
+                case 3:
+                    System.out.println("Количество людей, узнавших секрет после текущего хранителя: " + secret.getNumberOfPeopleKnowAfter());
+                    break;
+                case 4:
+                    int n = getIntInput("Введите N (положительное для следующего, отрицательное для предыдущего): ", Integer.MIN_VALUE, Integer.MAX_VALUE);
+                    try {
+                        System.out.println("Имя N-го человека, узнавшего секрет: " + secret.getKeeperName(n));
+                    } catch (IndexOutOfBoundsException e) {
+                        System.out.println(e.getMessage());
+                    }
+                    break;
+                case 5:
+                    int m = getIntInput("Введите N (положительное для следующего, отрицательное для предыдущего): ", Integer.MIN_VALUE, Integer.MAX_VALUE);
+                    try {
+                        System.out.println("Разница в количестве символов текста секрета с N-ым человеком: " + secret.getTextDifferenceWith(m));
+                    } catch (IndexOutOfBoundsException e) {
+                        System.out.println(e.getMessage());
+                    }
+                    break;
+                default:
+                    System.out.println("Неверный выбор. Попробуйте снова.");
+            }
+        }
     }
 
-    private static void createHouses() {
-        System.out.println("Создание домов:");
-        int floors1 = getIntInput("Введите количество этажей для первого дома: ", 1, Integer.MAX_VALUE);
-        House house1 = new House(floors1);
 
-        int floors2 = getIntInput("Введите количество этажей для второго дома: ", 1, Integer.MAX_VALUE);
-        House house2 = new House(floors2);
-
-        int floors3 = getIntInput("Введите количество этажей для третьего дома: ", 1, Integer.MAX_VALUE);
-        House house3 = new House(floors3);
-
-        System.out.println(house1);
-        System.out.println(house2);
-        System.out.println(house3);
-    }
-
-    private static void createEmployeesAndDepartments() {
-        System.out.println("Создание сотрудников и отделов:");
-        String emp1Name = getStringInput("Введите имя первого сотрудника: ");
-        Employee emp1 = new Employee(emp1Name);
-
-        String emp2Name = getStringInput("Введите имя второго сотрудника: ");
-        Employee emp2 = new Employee(emp2Name);
-
-        String emp3Name = getStringInput("Введите имя третьего сотрудника: ");
-        Employee emp3 = new Employee(emp3Name);
-
-        String emp4Name = getStringInput("Введите имя начальника отдела: ");
-        Employee emp4 = new Employee(emp4Name);
-
-        String departmentName = getStringInput("Введите название отдела: ");
-        Department department = new Department(departmentName, emp4);
-
-        emp1.setDepartment(department);
-        emp2.setDepartment(department);
-        emp3.setDepartment(department);
-        emp4.setDepartment(department);
-
-        System.out.println(emp1);
-        System.out.println(emp2);
-        System.out.println(emp3);
-        System.out.println(emp4);
-    }
-
-    private static void printDepartmentEmployees() {
-        System.out.println("Вывод списка сотрудников отдела:");
-        String emp1Name = getStringInput("Введите имя первого сотрудника: ");
-        Employee emp1 = new Employee(emp1Name);
-
-        String emp2Name = getStringInput("Введите имя второго сотрудника: ");
-        Employee emp2 = new Employee(emp2Name);
-
-        String emp3Name = getStringInput("Введите имя третьего сотрудника: ");
-        Employee emp3 = new Employee(emp3Name);
-
-        String departmentName = getStringInput("Введите название отдела: ");
-        Department department = new Department(departmentName, emp2);
-
-        emp1.setDepartment(department);
-        emp2.setDepartment(department);
-        emp3.setDepartment(department);
-
-        emp1.printDepartmentEmployees();
-    }
-
-    private static void createExtendedNames() {
-        System.out.println("Создание имен (расширенная):");
-        String firstName1 = getStringInput("Введите личное имя для первого имени: ");
-        String lastName1 = getStringInput("Введите фамилию для первого имени: ");
-        String middleName1 = getStringInput("Введите отчество для первого имени: ");
-        Name name1 = new Name(firstName1, lastName1, middleName1);
-
-        String firstName2 = getStringInput("Введите личное имя для второго имени: ");
-        String lastName2 = getStringInput("Введите фамилию для второго имени: ");
-        String middleName2 = getStringInput("Введите отчество для второго имени: ");
-        Name name2 = new Name(firstName2, lastName2, middleName2);
-
-        String firstName3 = getStringInput("Введите личное имя для третьего имени: ");
-        String lastName3 = getStringInput("Введите фамилию для третьего имени: ");
-        String middleName3 = getStringInput("Введите отчество для третьего имени: ");
-        Name name3 = new Name(firstName3, lastName3, middleName3);
-
-        String firstName4 = getStringInput("Введите личное имя для четвертого имени: ");
-        String lastName4 = getStringInput("Введите фамилию для четвертого имени: ");
-        String middleName4 = getStringInput("Введите отчество для четвертого имени: ");
-        Name name4 = new Name(firstName4, lastName4, middleName4);
-
-        System.out.println(name1);
-        System.out.println(name2);
-        System.out.println(name3);
-        System.out.println(name4);
-    }
-
-    private static void workWithFractions() {
+    private static void workWithFractions1() {
         System.out.println("Работа с дробями:");
-        int numerator1 = getIntInput("Введите числитель для первой дроби: ", 1, Integer.MAX_VALUE);
+        int numerator1 = getIntInput("Введите числитель для первой дроби: ", Integer.MIN_VALUE, Integer.MAX_VALUE);
         int denominator1 = getIntInput("Введите знаменатель для первой дроби: ", 1, Integer.MAX_VALUE);
-        Fraction f1 = new Fraction(numerator1, denominator1);
+        Fraction1 f1 = new Fraction1(numerator1, denominator1);
 
-        int numerator2 = getIntInput("Введите числитель для второй дроби: ", 1, Integer.MAX_VALUE);
+        int numerator2 = getIntInput("Введите числитель для второй дроби: ", Integer.MIN_VALUE, Integer.MAX_VALUE);
         int denominator2 = getIntInput("Введите знаменатель для второй дроби: ", 1, Integer.MAX_VALUE);
-        Fraction f2 = new Fraction(numerator2, denominator2);
+        Fraction1 f2 = new Fraction1(numerator2, denominator2);
 
-        int numerator3 = getIntInput("Введите числитель для третьей дроби: ", 1, Integer.MAX_VALUE);
+        int numerator3 = getIntInput("Введите числитель для третьей дроби: ", Integer.MIN_VALUE, Integer.MAX_VALUE);
         int denominator3 = getIntInput("Введите знаменатель для третьей дроби: ", 1, Integer.MAX_VALUE);
-        Fraction f3 = new Fraction(numerator3, denominator3);
+        Fraction1 f3 = new Fraction1(numerator3, denominator3);
 
         System.out.println(f1 + " * " + f2 + " = " + f1.multiply(f2));
         System.out.println(f1 + " + " + f2 + " = " + f1.add(f2));
         System.out.println(f1 + " / " + f2 + " = " + f1.divide(f2));
         System.out.println(f1 + " - " + f2 + " = " + f1.subtract(f2));
 
-        Fraction result = f1.add(f2).divide(f3).subtract(5);
-        System.out.println("f1.sum(f2).div(f3).minus(5) = " + result);
+        Fraction1 result = f1.add(f2).divide(f3).subtract(5);
+        System.out.println("f1.add(f2).divide(f3).subtract(5) = " + result);
+    }
+
+    private static void workWithFractions2() {
+        System.out.println("Работа с дробями:");
+        int numerator1 = getIntInput("Введите числитель для первой дроби: ", Integer.MIN_VALUE, Integer.MAX_VALUE);
+        int denominator1 = getIntInput("Введите знаменатель для первой дроби: ", 1, Integer.MAX_VALUE);
+        Fraction2 f1 = new Fraction2(numerator1, denominator1);
+
+        int numerator2 = getIntInput("Введите числитель для второй дроби: ", Integer.MIN_VALUE, Integer.MAX_VALUE);
+        int denominator2 = getIntInput("Введите знаменатель для второй дроби: ", 1, Integer.MAX_VALUE);
+        Fraction2 f2 = new Fraction2(numerator2, denominator2);
+
+        int numerator3 = getIntInput("Введите числитель для третьей дроби: ", Integer.MIN_VALUE, Integer.MAX_VALUE);
+        int denominator3 = getIntInput("Введите знаменатель для третьей дроби: ", 1, Integer.MAX_VALUE);
+        Fraction2 f3 = new Fraction2(numerator3, denominator3);
+
+        System.out.println(f1 + " * " + f2 + " = " + f1.multiply(f2));
+        System.out.println(f1 + " + " + f2 + " = " + f1.add(f2));
+        System.out.println(f1 + " / " + f2 + " = " + f1.divide(f2));
+        System.out.println(f1 + " - " + f2 + " = " + f1.subtract(f2));
+
+        Fraction2 result = f1.add(f2).divide(f3).subtract(5);
+        System.out.println("f1.add(f2).divide(f3).subtract(5) = " + result);
+    }
+
+    private static void workWithFractions3() {
+        System.out.println("Работа с дробями:");
+        int numerator1 = getIntInput("Введите числитель для первой дроби: ", Integer.MIN_VALUE, Integer.MAX_VALUE);
+        int denominator1 = getIntInput("Введите знаменатель для первой дроби: ", 1, Integer.MAX_VALUE);
+        Fraction3 f1 = new Fraction3(numerator1, denominator1);
+
+        int numerator2 = getIntInput("Введите числитель для второй дроби: ", Integer.MIN_VALUE, Integer.MAX_VALUE);
+        int denominator2 = getIntInput("Введите знаменатель для второй дроби: ", 1, Integer.MAX_VALUE);
+        Fraction3 f2 = new Fraction3(numerator2, denominator2);
+
+        int numerator3 = getIntInput("Введите числитель для третьей дроби: ", Integer.MIN_VALUE, Integer.MAX_VALUE);
+        int denominator3 = getIntInput("Введите знаменатель для третьей дроби: ", 1, Integer.MAX_VALUE);
+        Fraction3 f3 = new Fraction3(numerator3, denominator3);
+
+        System.out.println(f1 + " * " + f2 + " = " + f1.multiply(f2));
+        System.out.println(f1 + " + " + f2 + " = " + f1.add(f2));
+        System.out.println(f1 + " / " + f2 + " = " + f1.divide(f2));
+        System.out.println(f1 + " - " + f2 + " = " + f1.subtract(f2));
+
+        Fraction3 result = f1.add(f2).divide(f3).subtract(5);
+        System.out.println("f1.add(f2).divide(f3).subtract(5) = " + result);
+        System.out.println("intValue: " + result.intValue());
+        System.out.println("longValue: " + result.longValue());
+        System.out.println("floatValue: " + result.floatValue());
+        System.out.println("doubleValue: " + result.doubleValue());
+    }
+
+    private static void workWithFractions4() {
+        System.out.println("Работа с дробями:");
+        int numerator1 = getIntInput("Введите числитель для первой дроби: ", Integer.MIN_VALUE, Integer.MAX_VALUE);
+        int denominator1 = getIntInput("Введите знаменатель для первой дроби: ", 1, Integer.MAX_VALUE);
+        Fraction4 f1 = new Fraction4(numerator1, denominator1);
+
+        int numerator2 = getIntInput("Введите числитель для второй дроби: ", Integer.MIN_VALUE, Integer.MAX_VALUE);
+        int denominator2 = getIntInput("Введите знаменатель для второй дроби: ", 1, Integer.MAX_VALUE);
+        Fraction4 f2 = new Fraction4(numerator2, denominator2);
+
+        int numerator3 = getIntInput("Введите числитель для третьей дроби: ", Integer.MIN_VALUE, Integer.MAX_VALUE);
+        int denominator3 = getIntInput("Введите знаменатель для третьей дроби: ", 1, Integer.MAX_VALUE);
+        Fraction4 f3 = new Fraction4(numerator3, denominator3);
+
+        System.out.println("f1.equals(f2): " + f1.equals(f2)); // true
+        System.out.println("f1.equals(f3): " + f1.equals(f3)); // false
+
+        System.out.println("f1.hashCode(): " + f1.hashCode());
+        System.out.println("f2.hashCode(): " + f2.hashCode());
+        System.out.println("f3.hashCode(): " + f3.hashCode());
+    }
+
+
+    private static void performAdditions() {
+        System.out.println("Сложение числовых значений:");
+        Number[] values1 = {2, new Fraction3(3, 5), 2.3};
+        System.out.println("2 + 3/5 + 2.3 = " + sum(values1));
+
+        Number[] values2 = {3.6, new Fraction3(49, 12), 3, new Fraction3(3, 2)};
+        System.out.println("3.6 + 49/12 + 3 + 3/2 = " + sum(values2));
+
+        Number[] values3 = {new Fraction3(1, 3), 1};
+        System.out.println("1/3 + 1 = " + sum(values3));
+
+    }
+
+    private static double sum(Number[] values) {
+        double sum = 0;
+        for (Number value : values) {
+            sum += value.doubleValue();
+        }
+        return sum;
     }
 
     private static int getIntInput(String prompt, int min, int max) {
@@ -201,25 +264,308 @@ public class Main {
     }
 
     private static String getStringInput(String prompt) {
-        while (true) {
-            System.out.print(prompt);
-            String input = scanner.nextLine().trim();
-            if (!input.isEmpty()) {
-                return input;
-            } else {
-                System.out.println("Введено пустое значение! Попробуйте снова.");
-            }
-        }
+        System.out.print(prompt);
+        return scanner.nextLine().trim();
     }
 }
 
-// Задача 1: Имена
+class Fraction1 {
+    private final int numerator;
+    private final int denominator;
+
+    public Fraction1(int numerator, int denominator) {
+        if (denominator == 0) {
+            throw new IllegalArgumentException("Знаменатель не может быть равен нулю.");
+        }
+        // Убеждаемся, что знаменатель положительный, а знак дроби отражается в числителе
+        if (denominator < 0) {
+            numerator = -numerator;
+            denominator = -denominator;
+        }
+        int gcd = gcd(Math.abs(numerator), Math.abs(denominator));
+        this.numerator = numerator / gcd;
+        this.denominator = denominator / gcd;
+    }
+
+    public Fraction1 add(Fraction1 other) {
+        int newNumerator = this.numerator * other.denominator + other.numerator * this.denominator;
+        int newDenominator = this.denominator * other.denominator;
+        return new Fraction1(newNumerator, newDenominator);
+    }
+
+    public Fraction1 subtract(Fraction1 other) {
+        int newNumerator = this.numerator * other.denominator - other.numerator * this.denominator;
+        int newDenominator = this.denominator * other.denominator;
+        return new Fraction1(newNumerator, newDenominator);
+    }
+
+    public Fraction1 multiply(Fraction1 other) {
+        int newNumerator = this.numerator * other.numerator;
+        int newDenominator = this.denominator * other.denominator;
+        return new Fraction1(newNumerator, newDenominator);
+    }
+
+    public Fraction1 divide(Fraction1 other) {
+        if (other.numerator == 0) {
+            throw new IllegalArgumentException("Деление на ноль невозможно.");
+        }
+        int newNumerator = this.numerator * other.denominator;
+        int newDenominator = this.denominator * other.numerator;
+        return new Fraction1(newNumerator, newDenominator);
+    }
+
+    public Fraction1 subtract(int number) {
+        return new Fraction1(this.numerator - number * this.denominator, this.denominator);
+    }
+
+    @Override
+    public String toString() {
+        return numerator + "/" + denominator;
+    }
+
+    private int gcd(int a, int b) {
+        while (b != 0) {
+            int temp = b;
+            b = a % b;
+            a = temp;
+        }
+        return a;
+    }
+}
+
+final class Fraction2 {
+    private final int numerator;
+    private final int denominator;
+
+    public Fraction2(int numerator, int denominator) {
+        if (denominator == 0) {
+            throw new IllegalArgumentException("Знаменатель не может быть равен нулю.");
+        }
+        // Убеждаемся, что знаменатель положительный, а знак дроби отражается в числителе
+        if (denominator < 0) {
+            numerator = -numerator;
+            denominator = -denominator;
+        }
+        int gcd = gcd(Math.abs(numerator), Math.abs(denominator));
+        this.numerator = numerator / gcd;
+        this.denominator = denominator / gcd;
+    }
+
+    public Fraction2 add(Fraction2 other) {
+        int newNumerator = this.numerator * other.denominator + other.numerator * this.denominator;
+        int newDenominator = this.denominator * other.denominator;
+        return new Fraction2(newNumerator, newDenominator);
+    }
+
+    public Fraction2 subtract(Fraction2 other) {
+        int newNumerator = this.numerator * other.denominator - other.numerator * this.denominator;
+        int newDenominator = this.denominator * other.denominator;
+        return new Fraction2(newNumerator, newDenominator);
+    }
+
+    public Fraction2 multiply(Fraction2 other) {
+        int newNumerator = this.numerator * other.numerator;
+        int newDenominator = this.denominator * other.denominator;
+        return new Fraction2(newNumerator, newDenominator);
+    }
+
+    public Fraction2 divide(Fraction2 other) {
+        if (other.numerator == 0) {
+            throw new IllegalArgumentException("Деление на ноль невозможно.");
+        }
+        int newNumerator = this.numerator * other.denominator;
+        int newDenominator = this.denominator * other.numerator;
+        return new Fraction2(newNumerator, newDenominator);
+    }
+
+    public Fraction2 subtract(int number) {
+        return new Fraction2(this.numerator - number * this.denominator, this.denominator);
+    }
+
+    @Override
+    public String toString() {
+        return numerator + "/" + denominator;
+    }
+
+    private int gcd(int a, int b) {
+        while (b != 0) {
+            int temp = b;
+            b = a % b;
+            a = temp;
+        }
+        return a;
+    }
+}
+/*Финальный класс (final): Класс Fraction3 объявлен как final, что означает (не может иметь подклассов). Это предотвращает создание подклассов, которые могли бы изменять состояние дроби.
+
+Неизменяемое состояние: Поля numerator и denominator объявлены как final, что означает, что они не могут быть изменены после инициализации.
+
+Методы возвращают новые экземпляры: Все методы, которые изменяют дробь (например, add, subtract, multiply, divide), возвращают новые экземпляры Fraction3, а не изменяют текущий экземпляр.*/
+
+final class Fraction3 extends Number implements Serializable {
+    private final int numerator;
+    private final int denominator;
+
+    public Fraction3(int numerator, int denominator) {
+        if (denominator == 0) {
+            throw new IllegalArgumentException("Знаменатель не может быть равен нулю.");
+        }
+        // Убеждаемся, что знаменатель положительный, а знак дроби отражается в числителе
+        if (denominator < 0) {
+            numerator = -numerator;
+            denominator = -denominator;
+        }
+        int gcd = gcd(Math.abs(numerator), Math.abs(denominator));
+        this.numerator = numerator / gcd;
+        this.denominator = denominator / gcd;
+    }
+
+    public Fraction3 add(Fraction3 other) {
+        int newNumerator = this.numerator * other.denominator + other.numerator * this.denominator;
+        int newDenominator = this.denominator * other.denominator;
+        return new Fraction3(newNumerator, newDenominator);
+    }
+
+    public Fraction3 subtract(Fraction3 other) {
+        int newNumerator = this.numerator * other.denominator - other.numerator * this.denominator;
+        int newDenominator = this.denominator * other.denominator;
+        return new Fraction3(newNumerator, newDenominator);
+    }
+
+    public Fraction3 multiply(Fraction3 other) {
+        int newNumerator = this.numerator * other.numerator;
+        int newDenominator = this.denominator * other.denominator;
+        return new Fraction3(newNumerator, newDenominator);
+    }
+
+    public Fraction3 divide(Fraction3 other) {
+        if (other.numerator == 0) {
+            throw new IllegalArgumentException("Деление на ноль невозможно.");
+        }
+        int newNumerator = this.numerator * other.denominator;
+        int newDenominator = this.denominator * other.numerator;
+        return new Fraction3(newNumerator, newDenominator);
+    }
+
+    public Fraction3 subtract(int number) {
+        return subtract(new Fraction3(number, 1));
+    }
+
+    @Override
+    public String toString() {
+        return numerator + "/" + denominator;
+    }
+
+    private int gcd(int a, int b) {
+        while (b != 0) {
+            int temp = b;
+            b = a % b;
+            a = temp;
+        }
+        return a;
+    }
+
+    @Override
+    public int intValue() {
+        return numerator / denominator;
+    }
+
+    @Override
+    public long longValue() {
+        return (long) numerator / denominator;
+    }
+
+    @Override
+    public float floatValue() {
+        return (float) numerator / denominator;
+    }
+
+    @Override
+    public double doubleValue() {
+        return (double) numerator / denominator;
+    }
+}
+
+final class Fraction4 extends Number implements Serializable {
+    private final int numerator;
+    private final int denominator;
+
+    public Fraction4(int numerator, int denominator) {
+        if (denominator == 0) {
+            throw new IllegalArgumentException("Знаменатель не может быть равен нулю.");
+        }
+        // Убеждаемся, что знаменатель положительный, а знак дроби отражается в числителе
+        if (denominator < 0) {
+            numerator = -numerator;
+            denominator = -denominator;
+        }
+        int gcd = gcd(Math.abs(numerator), Math.abs(denominator));
+        this.numerator = numerator / gcd;
+        this.denominator = denominator / gcd;
+    }
+
+    @Override
+    public String toString() {
+        return numerator + "/" + denominator;
+    }
+
+    private int gcd(int a, int b) {
+        while (b != 0) {
+            int temp = b;
+            b = a % b;
+            a = temp;
+        }
+        return a;
+    }
+
+    @Override
+    public int intValue() {
+        return numerator / denominator;
+    }
+
+    @Override
+    public long longValue() {
+        return (long) numerator / denominator;
+    }
+
+    @Override
+    public float floatValue() {
+        return (float) numerator / denominator;
+    }
+
+    @Override
+    public double doubleValue() {
+        return (double) numerator / denominator;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Fraction4 fraction = (Fraction4) obj;
+        return numerator * fraction.denominator == fraction.numerator * denominator;
+    }
+
+    @Override
+    public int hashCode() {
+        return 31 * this.numerator + this.denominator;
+    }
+}
+
+//1.7
 class Name {
-    private String firstName;
-    private String lastName;
-    private String middleName;
+    private final String firstName;
+    private final String lastName;
+    private final String middleName;
 
     public Name(String firstName, String lastName, String middleName) {
+        if (firstName == null || firstName.isEmpty()) {
+            if (lastName == null || lastName.isEmpty()) {
+                if (middleName == null || middleName.isEmpty()) {
+                    throw new IllegalArgumentException("Хотя бы один параметр должен быть не null и не пустой строкой.");
+                }
+            }
+        }
         this.firstName = firstName;
         this.lastName = lastName;
         this.middleName = middleName;
@@ -235,137 +581,77 @@ class Name {
     }
 }
 
-// Задача 2: Дом
-class House {
-    private int floors;
+//2.2
+class Secret {
+    private static final Random random = new Random();
+    private final String text;
+    private final String keeperName;
+    private final List<String> keepers;
 
-    public House(int floors) {
-        this.floors = floors;
+    public Secret(String keeperName, String text) {
+        this.text = text;
+        this.keeperName = keeperName;
+        this.keepers = new ArrayList<>();
+        this.keepers.add(keeperName);
+        System.out.println(keeperName + " сказал что " + text);
+    }
+
+    private Secret(String keeperName, String text, List<String> keepers) {
+        this.text = text;
+        this.keeperName = keeperName;
+        this.keepers = new ArrayList<>(keepers);
+        this.keepers.add(keeperName);
+        System.out.println(keeperName + " сказал что " + text);
+    }
+
+    public Secret tellSecretTo(String newKeeperName) {
+        if (keepers.contains(newKeeperName)) {
+            throw new IllegalArgumentException("Секрет уже был передан этому человеку.");
+        }
+        String newText = addRandomCharacters(text);
+        return new Secret(newKeeperName, newText, this.keepers);
+    }
+
+    private String addRandomCharacters(String originalText) {
+        int length = originalText.length();
+        int n = length / 10;
+        int x = random.nextInt(n + 1);
+        StringBuilder sb = new StringBuilder(originalText);
+        for (int i = 0; i < x; i++) {
+            char randomChar = (char) (random.nextInt(26) + 'a');
+            int randomPosition = random.nextInt(sb.length());
+            sb.insert(randomPosition, randomChar);
+        }
+        return sb.toString();
     }
 
     @Override
     public String toString() {
-        String suffix = "этажей";
-        if (floors == 1) suffix = "этаж";
-        else if (floors >= 2 && floors <= 4) suffix = "этажа";
-        return "у дома " + floors + " " + suffix;
-    }
-}
-
-// Задача 3 и 4: Сотрудники и отделы
-class Employee {
-    private String name;
-    private Department department;
-
-    public Employee(String name) {
-        this.name = name;
+        return keeperName + ": это секрет!";
     }
 
-    public void printDepartmentEmployees() {
-        if (department != null) {
-            department.printAllEmployees();
-        } else {
-            System.out.println("Сотрудник не прикреплен к отделу.");
+    public int getKeeperOrder() {
+        return keepers.indexOf(keeperName) + 1;
+    }
+
+    public int getNumberOfPeopleKnowAfter() {
+        return keepers.size() - getKeeperOrder();
+    }
+
+    public String getKeeperName(int n) {
+        int index = keepers.indexOf(keeperName) + n;
+        if (index < 0 || index >= keepers.size()) {
+            throw new IndexOutOfBoundsException("Нет такого хранителя.");
         }
+        return keepers.get(index);
     }
 
-    public void setDepartment(Department department) {
-        this.department = department;
-        department.addEmployee(this);
-    }
-
-    @Override
-    public String toString() {
-        if (department != null && department.getHead() == this) {
-            return name + " начальник отдела " + department.getName();
-        } else if (department != null) {
-            return name + " работает в отделе " + department.getName() + ", начальник которого " + department.getHead().name;
-        } else {
-            return name + " не прикреплен к отделу";
+    public int getTextDifferenceWith(int n) {
+        int index = keepers.indexOf(keeperName) + n;
+        if (index < 0 || index >= keepers.size()) {
+            throw new IndexOutOfBoundsException("Нет такого хранителя.");
         }
-    }
-}
-
-class Department {
-    private String name;
-    private Employee head;
-    private List<Employee> employees = new ArrayList<>();
-
-    public Department(String name, Employee head) {
-        this.name = name;
-        this.head = head;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Employee getHead() {
-        return head;
-    }
-
-    public void addEmployee(Employee employee) {
-        employees.add(employee);
-    }
-
-    public void printAllEmployees() {
-        System.out.println("Сотрудники отдела " + this.name + ":");
-        for (Employee e : employees) {
-            System.out.println(e);
-        }
-    }
-
-    public List<Employee> getEmployees() {
-        return employees;
-    }
-}
-
-// Задача 6: Дроби
-class Fraction {
-    private int numerator;
-    private int denominator;
-
-    public Fraction(int numerator, int denominator) {
-        if (denominator == 0) {
-            throw new IllegalArgumentException("Знаменатель не может быть равен нулю.");
-        }
-        this.numerator = numerator;
-        this.denominator = denominator;
-    }
-
-    public Fraction add(Fraction other) {
-        int newNumerator = this.numerator * other.denominator + other.numerator * this.denominator;
-        int newDenominator = this.denominator * other.denominator;
-        return new Fraction(newNumerator, newDenominator);
-    }
-
-    public Fraction subtract(Fraction other) {
-        int newNumerator = this.numerator * other.denominator - other.numerator * this.denominator;
-        int newDenominator = this.denominator * other.denominator;
-        return new Fraction(newNumerator, newDenominator);
-    }
-
-    public Fraction multiply(Fraction other) {
-        int newNumerator = this.numerator * other.numerator;
-        int newDenominator = this.denominator * other.denominator;
-        return new Fraction(newNumerator, newDenominator);
-    }
-
-    public Fraction divide(Fraction other) {
-        if (other.numerator == 0) {
-            throw new IllegalArgumentException("Деление на ноль невозможно.");
-        }
-        int newNumerator = this.numerator * other.denominator;
-        int newDenominator = this.denominator * other.numerator;
-        return new Fraction(newNumerator, newDenominator);
-    }
-
-    public Fraction subtract(int number) {
-        return subtract(new Fraction(number, 1));
-    }
-
-    @Override
-    public String toString() {
-        return numerator + "/" + denominator;
+        Secret otherSecret = new Secret(keepers.get(index), text, keepers);
+        return Math.abs(this.text.length() - otherSecret.text.length());
     }
 }
