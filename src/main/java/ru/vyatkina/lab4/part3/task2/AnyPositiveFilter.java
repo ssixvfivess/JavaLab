@@ -11,3 +11,8 @@ public class AnyPositiveFilter implements Filter<int[]> {
         return false;
     }
 }
+
+
+// class by interface
+// method test return boolean in input array by int means ints
+// for-each

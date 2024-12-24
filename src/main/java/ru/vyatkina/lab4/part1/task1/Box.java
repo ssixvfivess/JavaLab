@@ -10,7 +10,7 @@ public class Box<T> {
         this.value = value;
     }
 
-    public T get() {
+    public T get() { //извлекает и очищает
         if (isEmpty()) {
             return null;
         }
@@ -19,7 +19,7 @@ public class Box<T> {
         return value;
     }
 
-    public void put(T value) {
+    public void put(T value) { //помещает
         if (!isEmpty()) {
             throw new IllegalStateException("Коробка не пуста");
         }
@@ -28,5 +28,5 @@ public class Box<T> {
 
     public boolean isEmpty() {
         return value == null;
-    }
+    } //проверка на пустоту
 }

@@ -12,3 +12,6 @@ public class MinLengthFilter implements Filter<String> {
         return s.length() < minLength;
     }
 }
+
+//method test
+//save min in minLenght
